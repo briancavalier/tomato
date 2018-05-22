@@ -1,0 +1,30 @@
+{
+  "name": "@briancavalier/tomato",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "author": "Brian Cavalier <brian@briancavalier.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-flow": "^6.23.0",
+    "babel-register": "^6.26.0",
+    "eslint-plugin-flowtype": "^2.46.3",
+    "flow-bin": "^0.72.0",
+    "standard": "^11.0.1"
+  },
+  "babel": {
+    "presets": [
+      ["env", { "targets": { "node": "current" }}],
+      "flow"
+    ]
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "plugings": [
+      "flowtype"
+    ]
+  }
+}
