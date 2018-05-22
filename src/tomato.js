@@ -11,6 +11,9 @@ export type Tomato<A, B> = {
 }
 
 // Identity transform
+export const id = <A> (): Tomato<A, A> =>
+  new Id()
+
 export class Id<A> {
   step (a: A): TStep<A, A> {
     return next(a, this)
@@ -18,6 +21,9 @@ export class Id<A> {
 }
 
 // Transform everything to a constant value
+export const always = <X, A> (a: A): Tomato<X, A> =>
+  new Const(a)
+
 export class Const<A> {
   value: A
   constructor (value: A) {
@@ -30,6 +36,9 @@ export class Const<A> {
 }
 
 // Lift a pure function into an automaton
+export const lift = <A, B> (f: A => B): Tomato<A, B> =>
+  new Lift(f)
+
 export class Lift<A, B> {
   f: A => B
   constructor (f: A => B) {
@@ -42,6 +51,9 @@ export class Lift<A, B> {
 }
 
 // Skip inputs for which a predicate is false
+export const filter = <A> (p: A => boolean): Tomato<A, A> =>
+  new Filter(p)
+
 export class Filter<A> {
   p: A => boolean
   constructor (p: A => boolean) {
@@ -56,6 +68,9 @@ export class Filter<A> {
 }
 
 // End after n steps
+export const take = <A> (n: number): Tomato<A, A> =>
+  new Take(n)
+
 export class Take<A> {
   n: number
   constructor (n: number) {
@@ -70,6 +85,9 @@ export class Take<A> {
 }
 
 // Compose (left to right) two automatons
+export const pipe = <A, B, C> (ab: Tomato<A, B>, bc: Tomato<B, C>): Tomato<A, C> =>
+  new Pipe(ab, bc)
+
 export class Pipe<A, B, C> {
   ab: Tomato<A, B>
   bc: Tomato<B, C>

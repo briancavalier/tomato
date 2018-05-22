@@ -1,4 +1,5 @@
 // @flow
+import { type Tomato } from './tomato'
 
 export const foldIterable = <A, R> (t: Tomato<[R, A], R>, r: R, i: Iterable<A>): R => {
   let s
