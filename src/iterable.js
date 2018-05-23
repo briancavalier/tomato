@@ -1,21 +1,25 @@
 // @flow
 import { type Tomato } from './tomato'
+import { END, NEXT, SKIP } from './step'
 
+// Fold an automaton over any Iterable
 export const foldIterable = <A, R> (t: Tomato<[R, A], R>, r: R, i: Iterable<A>): R => {
   let s
+  let result = r
+  let tom = t
   for (const a of i) {
-    s = t.step([r, a])
+    s = tom.step([r, a])
     switch (s.type) {
-      case 0:
-        return r
-      case 1:
-        t = s.state
+      case END:
+        return result
+      case SKIP:
+        tom = s.state
         break
-      case 2:
-        r = s.value
-        t = s.state
+      case NEXT:
+        result = s.value
+        tom = s.state
         break
     }
   }
-  return r
+  return result
 }

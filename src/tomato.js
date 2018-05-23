@@ -1,6 +1,6 @@
 // @flow
 
-import { type Step, end, next, skip } from './step'
+import { type Step, end, next, skip, END, NEXT, SKIP } from './step'
 
 export type TStep<A, B> = Step<B, Tomato<A, B>>
 
@@ -49,6 +49,18 @@ export class Lift<A, B> {
     return next(this.f(a), this)
   }
 }
+
+// Transform the input and output
+export const promap = <A, B, C, D> (l: A => B, r: C => D, t: Tomato<B, C>): Tomato<A, D> =>
+  lmap(l, rmap(r, t))
+
+// Transform only the input
+export const lmap = <A, B, C> (l: A => B, t: Tomato<B, C>): Tomato<A, C> =>
+  pipe(lift(l), t)
+
+// Transform only the output
+export const rmap = <A, B, C> (r: B => C, t: Tomato<A, B>): Tomato<A, C> =>
+  pipe(t, lift(r))
 
 // Skip inputs for which a predicate is false
 export const filter = <A> (p: A => boolean): Tomato<A, A> =>
@@ -99,14 +111,14 @@ export class Pipe<A, B, C> {
   step (a: A): TStep<A, C> {
     const r = this.ab.step(a)
     switch (r.type) {
-      case 0: return end()
-      case 1: return skip(new Pipe(r.state, this.bc))
+      case END: return end()
+      case SKIP: return skip(new Pipe(r.state, this.bc))
     }
 
     const r2 = this.bc.step(r.value)
     switch (r2.type) {
-      case 0: return end()
-      case 1: return skip(new Pipe(r.state, r2.state))
+      case END: return end()
+      case SKIP: return skip(new Pipe(r.state, r2.state))
     }
 
     return next(r2.value, new Pipe(r.state, r2.state))
