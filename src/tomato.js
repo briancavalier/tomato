@@ -1,6 +1,6 @@
 // @flow
 
-import { type Step, end, next, skip, END, NEXT, SKIP } from './step'
+import { type Step, end, next, skip, END, SKIP } from './step'
 
 export type TStep<A, B> = Step<B, Tomato<A, B>>
 
@@ -109,18 +109,18 @@ export class Pipe<A, B, C> {
   }
 
   step (a: A): TStep<A, C> {
-    const r = this.ab.step(a)
-    switch (r.type) {
+    const r1 = this.ab.step(a)
+    switch (r1.type) {
       case END: return end()
-      case SKIP: return skip(new Pipe(r.state, this.bc))
+      case SKIP: return skip(new Pipe(r1.state, this.bc))
     }
 
-    const r2 = this.bc.step(r.value)
+    const r2 = this.bc.step(r1.value)
     switch (r2.type) {
       case END: return end()
-      case SKIP: return skip(new Pipe(r.state, r2.state))
+      case SKIP: return skip(new Pipe(r1.state, r2.state))
     }
 
-    return next(r2.value, new Pipe(r.state, r2.state))
+    return next(r2.value, new Pipe(r1.state, r2.state))
   }
 }

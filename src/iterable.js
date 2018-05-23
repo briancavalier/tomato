@@ -8,7 +8,7 @@ export const foldIterable = <A, R> (t: Tomato<[R, A], R>, r: R, i: Iterable<A>):
   let result = r
   let tom = t
   for (const a of i) {
-    s = tom.step([r, a])
+    s = tom.step([result, a])
     switch (s.type) {
       case END:
         return result
