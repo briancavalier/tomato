@@ -1,13 +1,37 @@
 // @flow
-import { type Tomato } from './tomato'
+import { type Tomato } from './core'
 import { END, NEXT, SKIP } from './step'
+/* global Iterable */
+
+// Transform an Iterable by stepping an automaton over
+// all its items
+export const runIterable = <A, B> (t: Tomato<A, B>, ia: Iterable<A>): B[] => {
+  let s
+  let b = []
+  let tom = t
+  for (const a of ia) {
+    s = tom.step(a)
+    switch (s.type) {
+      case END:
+        return b
+      case SKIP:
+        tom = s.state
+        break
+      case NEXT:
+        b.push(s.value)
+        tom = s.state
+        break
+    }
+  }
+  return b
+}
 
 // Fold an automaton over any Iterable
-export const foldIterable = <A, R> (t: Tomato<[R, A], R>, r: R, i: Iterable<A>): R => {
+export const foldIterable = <A, R> (t: Tomato<[R, A], R>, r: R, ia: Iterable<A>): R => {
   let s
   let result = r
   let tom = t
-  for (const a of i) {
+  for (const a of ia) {
     s = tom.step([result, a])
     switch (s.type) {
       case END:
