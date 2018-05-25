@@ -57,21 +57,21 @@ class First<A, B, C> {
 
 // Costrong
 
-export const unfirst = <A, B, C> (t: Tomato<[A, C], [B, C]>, c: C): Tomato<A, B> =>
-  new Unfirst(t, c)
+export const unfirst = <A, B, C> (c: C, t: Tomato<[A, C], [B, C]>): Tomato<A, B> =>
+  new Unfirst(c, t)
 
 class Unfirst<A, B, C> {
-  t: Tomato<[A, C], [B, C]>
   c: C
-  constructor (t: Tomato<[A, C], [B, C]>, c: C) {
-    this.t = t
+  t: Tomato<[A, C], [B, C]>
+  constructor (c: C, t: Tomato<[A, C], [B, C]>) {
     this.c = c
+    this.t = t
   }
 
   step (a: A): TStep<A, B> {
     const s = this.t.step([a, this.c])
     return s.type === END ? end()
-      : s.type === SKIP ? skip(new Unfirst(s.state, this.c))
-        : next(fst(s.value), new Unfirst(s.state, snd(s.value)))
+      : s.type === SKIP ? skip(new Unfirst(this.c, s.state))
+        : next(fst(s.value), new Unfirst(snd(s.value), s.state))
   }
 }
