@@ -7,7 +7,8 @@ const dup = <A> (a: A): [A, A] => [a, a]
 const fst = <A, B> (ab: [A, B]): A => ab[0]
 const snd = <A, B> (ab: [A, B]): B => ab[1]
 
-// Strong
+// Strong / Costrong
+// Transformations on products (pairs)
 
 export const split = <A> (): Tomato<A, [A, A]> =>
   lift(dup)
@@ -17,6 +18,9 @@ export const unsplit = <A, B, C> (f: (A, B) => C): Tomato<[A, B], C> =>
 
 export const fanout = <A, B, C> (ab: Tomato<A, B>, ac: Tomato<A, C>): Tomato<A, [B, C]> =>
   pipe(split(), parallel(ab, ac))
+
+export const lift2 = <A, B, C, D> (f: (B, C) => D, ab: Tomato<A, B>, ac: Tomato<A, C>): Tomato<A, D> =>
+  pipe(fanout(ab, ac), unsplit(f))
 
 export const parallel = <A, B, C, D> (ac: Tomato<A, C>, bd: Tomato<B, D>): Tomato<[A, B], [C, D]> =>
   new Parallel(ac, bd)
@@ -54,8 +58,6 @@ class First<A, B, C> {
         : next([s.value, snd(ac)], new First(s.state))
   }
 }
-
-// Costrong
 
 export const unfirst = <A, B, C> (c: C, t: Tomato<[A, C], [B, C]>): Tomato<A, B> =>
   new Unfirst(c, t)
