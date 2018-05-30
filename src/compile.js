@@ -23,11 +23,11 @@ export const compile2 = <A, B, C> (ab: Tomato<A, B>, bc: Tomato<B, C>): Tomato<A
 const _compile2 = <A, B, C> (ab: Tomato<A, B>, bc: Tomato<B, C>): Tomato<A, C> => {
   // Id is a noop, so can be dropped outright
   if (ab instanceof Id) {
-    return ((compile(bc): any): Tomato<A, C>)
+    return (((bc): any): Tomato<A, C>)
   }
 
   if (bc instanceof Id) {
-    return ((compile(ab): any): Tomato<A, C>)
+    return (((ab): any): Tomato<A, C>)
   }
 
   // Always annihilates Lift
