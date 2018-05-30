@@ -2,13 +2,15 @@
 
 import { type Step, end, next, skip, END, SKIP } from './step'
 
-export type TStep<A, B> = Step<B, Tomato<A, B>>
-
 // An automaton that can be stepped to transform
 // a value and returns an updated automaton
 export type Tomato<A, B> = {
   step (A): TStep<A, B>
 }
+
+// Stepping an automaton yields a value and an
+// automaton in an updated state
+export type TStep<A, B> = Step<B, Tomato<A, B>>
 
 // Identity transform
 export const id = <A> (): Tomato<A, A> =>
@@ -38,6 +40,10 @@ export class Lift<A, B> {
 // Compose (left to right)
 export const pipe = <A, B, C> (ab: Tomato<A, B>, bc: Tomato<B, C>): Tomato<A, C> =>
   new Pipe(ab, bc)
+
+// Curried right-to-left compose for use in |> pipelines
+export const to = <A, B, C> (bc: Tomato<B, C>): (Tomato<A, B> => Tomato<A, C>) =>
+  ab => pipe(ab, bc)
 
 export class Pipe<A, B, C> {
   ab: Tomato<A, B>

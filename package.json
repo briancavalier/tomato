@@ -6,20 +6,29 @@
   "author": "Brian Cavalier <brian@briancavalier.com>",
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.0.0-beta.49",
+    "@babel/core": "^7.0.0-beta.49",
+    "@babel/preset-env": "^7.0.0-beta.49",
+    "@babel/preset-flow": "^7.0.0-beta.49",
+    "@babel/register": "^7.0.0-beta.49",
     "babel-eslint": "^8.2.3",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-flow": "^6.23.0",
-    "babel-register": "^6.26.0",
     "eslint-plugin-flowtype": "^2.46.3",
     "flow-bin": "^0.72.0",
     "standard": "^11.0.1"
   },
   "babel": {
     "presets": [
-      ["env", { "targets": { "node": "current" }}],
-      "flow"
-    ]
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-flow"
+    ],
+    "plugins": ["@babel/plugin-proposal-pipeline-operator"]
   },
   "standard": {
     "parser": "babel-eslint",
