@@ -35,7 +35,7 @@
   },
   "standard": {
     "parser": "babel-eslint",
-    "plugings": [
+    "plugins": [
       "flowtype"
     ]
   }
