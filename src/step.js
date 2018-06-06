@@ -1,19 +1,19 @@
 // @flow
 
-export const END: 0 = 0
+export const END: 2 = 2
 export const SKIP: 1 = 1
-export const NEXT: 2 = 2
+export const NEXT: 0 = 0
 
 export type Step<A, S> =
-  | { type: typeof END, value: void, state: void }
-  | { type: typeof SKIP, value: void, state: S }
-  | { type: typeof NEXT, value: A, state: S }
+  | { type: typeof END, value: void, next: void }
+  | { type: typeof SKIP, value: void, next: S }
+  | { type: typeof NEXT, value: A, next: S }
 
 export const end = <A, S> (): Step<A, S> =>
-  ({ type: END, value: undefined, state: undefined })
+  ({ type: END, value: undefined, next: undefined })
 
-export const skip = <A, S> (state: S): Step<A, S> =>
-  ({ type: SKIP, value: undefined, state })
+export const skip = <A, S> (next: S): Step<A, S> =>
+  ({ type: SKIP, value: undefined, next })
 
-export const next = <A, S> (value: A, state: S): Step<A, S> =>
-  ({ type: NEXT, value, state })
+export const next = <A, S> (value: A, next: S): Step<A, S> =>
+  ({ type: NEXT, value, next })

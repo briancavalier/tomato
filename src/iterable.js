@@ -15,11 +15,11 @@ export const runIterable = <A, B> (t: Tomato<A, B>, ia: Iterable<A>): B[] => {
       case END:
         return b
       case SKIP:
-        tom = s.state
+        tom = s.next
         break
       case NEXT:
         b.push(s.value)
-        tom = s.state
+        tom = s.next
         break
     }
   }
@@ -37,11 +37,11 @@ export const foldIterable = <A, R> (t: Tomato<[R, A], R>, r: R, ia: Iterable<A>)
       case END:
         return result
       case SKIP:
-        tom = s.state
+        tom = s.next
         break
       case NEXT:
         result = s.value
-        tom = s.state
+        tom = s.next
         break
     }
   }

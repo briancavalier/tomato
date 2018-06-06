@@ -57,16 +57,16 @@ export class Pipe<A, B, C> {
     const r1 = this.ab.step(a)
     switch (r1.type) {
       case END: return end()
-      case SKIP: return skip(new Pipe(r1.state, this.bc))
+      case SKIP: return skip(new Pipe(r1.next, this.bc))
     }
 
     const r2 = this.bc.step(r1.value)
     switch (r2.type) {
       case END: return end()
-      case SKIP: return skip(new Pipe(r1.state, r2.state))
+      case SKIP: return skip(new Pipe(r1.next, r2.next))
     }
 
-    return next(r2.value, new Pipe(r1.state, r2.state))
+    return next(r2.value, new Pipe(r1.next, r2.next))
   }
 }
 

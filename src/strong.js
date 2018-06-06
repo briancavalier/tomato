@@ -37,8 +37,8 @@ export class Parallel<A, B, C, D> {
     const s0 = this.ac.step(fst(ab))
     const s1 = this.bd.step(snd(ab))
     return s0.type === END || s1.type === END ? end()
-      : s0.type === SKIP || s1.type === SKIP ? skip(new Parallel(s0.state, s1.state))
-        : next([s0.value, s1.value], new Parallel(s0.state, s1.state))
+      : s0.type === SKIP || s1.type === SKIP ? skip(new Parallel(s0.next, s1.next))
+        : next([s0.value, s1.value], new Parallel(s0.next, s1.next))
   }
 }
 
@@ -54,8 +54,8 @@ class First<A, B, C> {
   step (ac: [A, C]): TStep<[A, C], [B, C]> {
     const s = this.ab.step(fst(ac))
     return s.type === END ? end()
-      : s.type === SKIP ? skip(new First(s.state))
-        : next([s.value, snd(ac)], new First(s.state))
+      : s.type === SKIP ? skip(new First(s.next))
+        : next([s.value, snd(ac)], new First(s.next))
   }
 }
 
@@ -73,7 +73,7 @@ class Unfirst<A, B, C> {
   step (a: A): TStep<A, B> {
     const s = this.t.step([a, this.c])
     return s.type === END ? end()
-      : s.type === SKIP ? skip(new Unfirst(this.c, s.state))
-        : next(fst(s.value), new Unfirst(snd(s.value), s.state))
+      : s.type === SKIP ? skip(new Unfirst(this.c, s.next))
+        : next(fst(s.value), new Unfirst(snd(s.value), s.next))
   }
 }
