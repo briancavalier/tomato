@@ -5,6 +5,10 @@
   "module": "dist/index.es.js",
   "author": "Brian Cavalier <brian@briancavalier.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "rollup -c && flow-copy-source src dist",
+    "prepare": "yarn build"
+  },
   "devDependencies": {
     "@babel/cli": "^7.0.0-beta.49",
     "@babel/core": "^7.0.0-beta.49",
@@ -15,6 +19,10 @@
     "babel-eslint": "^8.2.3",
     "eslint-plugin-flowtype": "^2.46.3",
     "flow-bin": "^0.72.0",
+    "flow-copy-source": "^2.0.0",
+    "rollup": "^0.60.1",
+    "rollup-plugin-babel": "^4.0.0-beta.4",
+    "rollup-plugin-node-resolve": "^3.3.0",
     "standard": "^11.0.1"
   },
   "babel": {
