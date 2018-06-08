@@ -8,7 +8,7 @@ export default {
     nodeResolve(),
     babel({
       babelrc: false,
-      presets: [ ['@babel/preset-env', { modules: false }], '@babel/preset-flow' ],
+      presets: [ ['@babel/preset-env', { modules: false, exclude: ['transform-regenerator'] }], '@babel/preset-flow' ],
       exclude: ['node_modules/**']
     })
   ],

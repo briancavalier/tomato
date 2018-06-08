@@ -1,29 +1,41 @@
 // @flow
-import { type Tomato } from './core'
+import { type Tomato, type TStep } from './core'
 import { END, NEXT, SKIP } from './step'
 /* global Iterable */
 
 // Transform an Iterable by stepping an automaton over
-// all its items
-export const runIterable = <A, B> (t: Tomato<A, B>, ia: Iterable<A>): B[] => {
+// all its items.  This fully materializes each step, and
+// is useful as a building block.
+// Most of the time, you probably want runIterable
+export function * stepIterable <A, B> (t: Tomato<A, B>, ia: Iterable<A>): Iterable<TStep<A, B>> {
   let s
-  let b = []
   let tom = t
   for (const a of ia) {
     s = tom.step(a)
     switch (s.type) {
       case END:
-        return b
-      case SKIP:
-        tom = s.next
-        break
-      case NEXT:
-        b.push(s.value)
+        yield s
+        return
+      default:
+        yield s
         tom = s.next
         break
     }
   }
-  return b
+}
+
+// Transform an Iterable by stepping an automaton over
+// all its items
+export function * runIterable <A, B> (t: Tomato<A, B>, ia: Iterable<A>): Iterable<B> {
+  for (const s of stepIterable(t, ia)) {
+    switch (s.type) {
+      case END: return
+      case SKIP: break
+      default:
+        yield s.value
+        break
+    }
+  }
 }
 
 // Fold an automaton over any Iterable
